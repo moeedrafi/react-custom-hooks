@@ -1,29 +1,40 @@
 import "./App.css";
-
-import { useState } from "react";
-import { useDocumentTitle } from "./hooks/useDocumentTitle";
+import useDefault from "./hooks/useDefault";
 
 export default function App() {
-  const [count, setCount] = useState(0);
+  const initialState = { name: "Tyler" };
+  const defaultState = { name: "Ben" };
 
-  useDocumentTitle(`Clicked ${count} times`);
+  const [user, setUser] = useDefault(initialState, defaultState);
 
   return (
     <section>
-      <h1>useDocumentTitle</h1>
-      <h6>
-        <a
-          className="link"
-          href="https://6vmc1n.csb.app/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Try in a new tab
-        </a>
-      </h6>
-      <button className="primary" onClick={() => setCount(count + 1)}>
-        Increment Count: {count}
+      <h1>useDefault</h1>
+
+      <button
+        title="Sets the value to Lynn"
+        className="link"
+        onClick={() => setUser({ name: "Lynn" })}
+      >
+        Lynn
       </button>
+      <button
+        title="Sets the value to Tyler"
+        className="link"
+        onClick={() => setUser({ name: "Tyler" })}
+      >
+        Tyler
+      </button>
+      <button
+        title="Sets the value to null causing it to use the default value"
+        className="link"
+        onClick={() => setUser(null)}
+      >
+        Null
+      </button>
+      <pre>
+        <code>{JSON.stringify(user)}</code>
+      </pre>
     </section>
   );
 }
