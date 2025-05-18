@@ -1,40 +1,42 @@
 import "./App.css";
-import useDefault from "./hooks/useDefault";
+import useToggle from "./hooks/useToggle";
+
+function ToggleDemo({ on, toggle }: { on: boolean; toggle: () => void }) {
+  return (
+    <div>
+      <label className="toggle">
+        <input
+          onChange={toggle}
+          className="toggle-checkbox"
+          type="checkbox"
+          checked={on}
+        />
+        <div className="toggle-switch"></div>
+        <span className="toggle-label">{on ? "On" : "Off"}</span>
+      </label>
+    </div>
+  );
+}
 
 export default function App() {
-  const initialState = { name: "Tyler" };
-  const defaultState = { name: "Ben" };
-
-  const [user, setUser] = useDefault(initialState, defaultState);
+  const [on, toggle] = useToggle(true);
 
   return (
     <section>
-      <h1>useDefault</h1>
-
-      <button
-        title="Sets the value to Lynn"
-        className="link"
-        onClick={() => setUser({ name: "Lynn" })}
-      >
-        Lynn
+      <h1>UseToggle</h1>
+      <button disabled={on} className="link" onClick={() => toggle(true)}>
+        Turn On
       </button>
-      <button
-        title="Sets the value to Tyler"
-        className="link"
-        onClick={() => setUser({ name: "Tyler" })}
-      >
-        Tyler
+      <button disabled={!on} className="link" onClick={() => toggle(false)}>
+        Turn Off
       </button>
-      <button
-        title="Sets the value to null causing it to use the default value"
-        className="link"
-        onClick={() => setUser(null)}
-      >
-        Null
+      <button className="link" onClick={toggle}>
+        Toggle
       </button>
-      <pre>
-        <code>{JSON.stringify(user)}</code>
-      </pre>
+      <button className="link" onClick={() => toggle("nope")}>
+        (Also toggles)
+      </button>
+      <ToggleDemo toggle={toggle} on={on} />
     </section>
   );
 }
