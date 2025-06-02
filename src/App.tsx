@@ -1,42 +1,44 @@
 import "./App.css";
-import useToggle from "./hooks/useToggle";
+import { useState } from "react";
+import usePrevious from "./hooks/usePrevious";
 
-function ToggleDemo({ on, toggle }: { on: boolean; toggle: () => void }) {
-  return (
-    <div>
-      <label className="toggle">
-        <input
-          onChange={toggle}
-          className="toggle-checkbox"
-          type="checkbox"
-          checked={on}
-        />
-        <div className="toggle-switch"></div>
-        <span className="toggle-label">{on ? "On" : "Off"}</span>
-      </label>
-    </div>
-  );
+function getRandomColor() {
+  const colors = ["green", "blue", "purple", "red", "pink"];
+  return colors[Math.floor(Math.random() * colors.length)];
 }
 
 export default function App() {
-  const [on, toggle] = useToggle(true);
+  const [color, setColor] = useState(getRandomColor());
+  const previousColor = usePrevious(color);
+
+  const handleClick = () => {
+    function getNewColor() {
+      const newColor = getRandomColor();
+      if (color === newColor) {
+        getNewColor();
+      } else {
+        setColor(newColor);
+      }
+    }
+    getNewColor();
+  };
 
   return (
     <section>
-      <h1>UseToggle</h1>
-      <button disabled={on} className="link" onClick={() => toggle(true)}>
-        Turn On
+      <h1>usePrevious</h1>
+      <button className="link" onClick={handleClick}>
+        Next
       </button>
-      <button disabled={!on} className="link" onClick={() => toggle(false)}>
-        Turn Off
-      </button>
-      <button className="link" onClick={toggle}>
-        Toggle
-      </button>
-      <button className="link" onClick={() => toggle("nope")}>
-        (Also toggles)
-      </button>
-      <ToggleDemo toggle={toggle} on={on} />
+      <article>
+        <figure>
+          <p style={{ background: `var(--${previousColor})` }} />
+          <figcaption>Previous: {previousColor}</figcaption>
+        </figure>
+        <figure>
+          <p style={{ background: `var(--${color})` }} />
+          <figcaption>Current: {color}</figcaption>
+        </figure>
+      </article>
     </section>
   );
 }
