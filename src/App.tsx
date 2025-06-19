@@ -1,44 +1,20 @@
 import "./App.css";
-import { useState } from "react";
-import usePrevious from "./hooks/usePrevious";
-
-function getRandomColor() {
-  const colors = ["green", "blue", "purple", "red", "pink"];
-  return colors[Math.floor(Math.random() * colors.length)];
-}
+import usePreferredLanguage from "./hooks/usePreferredLanguage";
 
 export default function App() {
-  const [color, setColor] = useState(getRandomColor());
-  const previousColor = usePrevious(color);
-
-  const handleClick = () => {
-    function getNewColor() {
-      const newColor = getRandomColor();
-      if (color === newColor) {
-        getNewColor();
-      } else {
-        setColor(newColor);
-      }
-    }
-    getNewColor();
-  };
+  const language = usePreferredLanguage();
 
   return (
     <section>
-      <h1>usePrevious</h1>
-      <button className="link" onClick={handleClick}>
-        Next
-      </button>
-      <article>
-        <figure>
-          <p style={{ background: `var(--${previousColor})` }} />
-          <figcaption>Previous: {previousColor}</figcaption>
-        </figure>
-        <figure>
-          <p style={{ background: `var(--${color})` }} />
-          <figcaption>Current: {color}</figcaption>
-        </figure>
-      </article>
+      <h1>usePreferredLanguage</h1>
+      <p>
+        You can change your preferred language here -
+        chrome://settings/languages
+      </p>
+      <h2>
+        The correct date format for <pre>{language}</pre> is{" "}
+        <time>{new Date(Date.now()).toLocaleDateString(language)}</time>
+      </h2>
     </section>
   );
 }
